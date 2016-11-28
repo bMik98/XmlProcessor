@@ -1,0 +1,16 @@
+#idea
+.idea/
+*.idea
+*.iml
+
+#general
+*.class
+build/
+classes/
+out/
+lib/
+
+# Package Files #
+*.jar
+*.war
+*.ear
