@@ -8,7 +8,7 @@ public class XmlProcessorTest {
     @Test
     public void doIt() throws Exception {
         int numberN = 10;
-        double expected = (((double) numberN + 1) / 2) * (double) numberN;
+        double expected = ((1.0 + numberN) / 2) * numberN;
         long startTime = System.currentTimeMillis();
         long result = new XmlProcessor().doIt(numberN);
         long timeSpent = System.currentTimeMillis() - startTime;

@@ -1,4 +1,4 @@
-package ru.magnit.xmlprocessor.dao;
+package ru.magnit.xmlprocessor.dao.util;
 
 import ru.magnit.xmlprocessor.property.ConnectionProperties;
 

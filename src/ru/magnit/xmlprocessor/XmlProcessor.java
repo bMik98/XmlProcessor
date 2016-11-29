@@ -2,8 +2,11 @@ package ru.magnit.xmlprocessor;
 
 import ru.magnit.xmlprocessor.application.ProcessingApplication;
 import ru.magnit.xmlprocessor.application.impl.XmlDatabaseProcessor;
+import ru.magnit.xmlprocessor.entity.Entry;
 import ru.magnit.xmlprocessor.property.impl.DirectApplicationProperties;
 import ru.magnit.xmlprocessor.property.impl.DirectConnectionProperties;
+
+import java.util.ArrayList;
 
 public class XmlProcessor {
 
