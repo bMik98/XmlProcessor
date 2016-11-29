@@ -1,41 +1,34 @@
 package ru.magnit.xmlprocessor.dao;
 
+import ru.magnit.xmlprocessor.property.ConnectionProperties;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
 public class ConnectionBuilder {
-    public static Connection getConnection() {
-        initJdbcDriver();
-        Connection connection = null;
-        String url = "jdbc:postgresql://127.0.0.1:5432/xmldb";
-        Properties props = new Properties();
-        props.setProperty("user", "root");
-        props.setProperty("password", "root");
+    public static Connection build(final ConnectionProperties properties) {
+        initJdbcDriver(properties.getDriverName());
+        Connection connection;
         try {
-            connection = DriverManager.getConnection(url, props);
+            connection = DriverManager.getConnection(properties.buildUrl(), properties.getProperties());
         } catch (SQLException e) {
-            System.out.println("Connection Failed! Check output console");
+            System.err.println("Connection Failed! Check output console");
             e.printStackTrace();
             return null;
         }
-
-        if (connection != null) {
-            System.out.println("You made it, take control your database now!");
-        } else {
-            System.out.println("Failed to make connection!");
+        if (connection == null) {
+            System.err.println("Failed to make connection!");
         }
         return connection;
     }
 
-    private static boolean initJdbcDriver() {
-        System.out.println("-------- PostgreSQL "
-                + "JDBC Connection Testing ------------");
+    private static boolean initJdbcDriver(final String driverName) {
         try {
-            Class.forName("org.postgresql.Driver");
+            Class.forName(driverName);
         } catch (ClassNotFoundException e) {
-            System.out.println("Where is your PostgreSQL JDBC Driver? "
+            System.out.println("Where is your JDBC Driver? "
                     + "Include in your library path!");
             e.printStackTrace();
             return false;

@@ -5,10 +5,10 @@ import ru.magnit.xmlprocessor.application.impl.XmlDatabaseProcessor;
 import ru.magnit.xmlprocessor.property.impl.DirectApplicationProperties;
 import ru.magnit.xmlprocessor.property.impl.DirectConnectionProperties;
 
-public class Application {
+public class XmlProcessor {
 
     public static void main(String[] args) {
-        new Application().doIt(new DirectApplicationProperties().getNumberN());
+        new XmlProcessor().doIt(new DirectApplicationProperties().getNumberN());
     }
 
     public long doIt(final int numberN) {
