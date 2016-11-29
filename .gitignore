@@ -8,9 +8,7 @@
 build/
 classes/
 out/
-lib/
 
 # Package Files #
-*.jar
 *.war
 *.ear
