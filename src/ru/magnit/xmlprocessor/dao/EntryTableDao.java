@@ -5,5 +5,5 @@ import ru.magnit.xmlprocessor.entity.Entry;
 /**
  * @author Mbedritskiy
  */
-public interface EntriesTableDao extends TableDao<Entry> {
+public interface EntryTableDao extends TableDao<Entry> {
 }

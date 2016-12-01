@@ -1,11 +1,11 @@
-package ru.magnit.xmlprocessor.application;
+package ru.magnit.xmlprocessor;
 
 import ru.magnit.xmlprocessor.property.ConnectionProperties;
 
 public interface ProcessingApplication {
-    long runAndCalculate();
+    long run();
 
     void setConnectionProperties(ConnectionProperties properties);
 
-    void setNumberN(int numberN);
+    void setNumber(int number);
 }

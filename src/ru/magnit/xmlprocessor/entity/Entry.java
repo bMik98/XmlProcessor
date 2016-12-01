@@ -1,13 +1,20 @@
 package ru.magnit.xmlprocessor.entity;
 
 public class Entry {
-    private int value;
+    private int field;
 
-    public int getValue() {
-        return value;
+    public Entry() {
     }
 
-    public void setValue(int value) {
-        this.value = value;
+    public Entry(int field) {
+        this.field = field;
+    }
+
+    public int getField() {
+        return field;
+    }
+
+    public void setField(int field) {
+        this.field = field;
     }
 }

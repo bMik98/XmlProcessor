@@ -5,7 +5,6 @@ import ru.magnit.xmlprocessor.property.ConnectionProperties;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Properties;
 
 public class ConnectionBuilder {
     public static Connection build(final ConnectionProperties properties) {
@@ -28,13 +27,10 @@ public class ConnectionBuilder {
         try {
             Class.forName(driverName);
         } catch (ClassNotFoundException e) {
-            System.out.println("Where is your JDBC Driver? "
-                    + "Include in your library path!");
+            System.err.println("Where is your JDBC Driver?");
             e.printStackTrace();
             return false;
         }
-
-        System.out.println("PostgreSQL JDBC Driver Registered!");
         return true;
     }
 }
