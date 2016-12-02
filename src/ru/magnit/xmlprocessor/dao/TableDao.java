@@ -3,9 +3,11 @@ package ru.magnit.xmlprocessor.dao;
 import java.util.List;
 
 public interface TableDao<T> {
-    void initTable();
+    void deleteAll();
 
-    void populateTable(int numberOfEntities);
+    void save(List<T> entities);
 
     List<T> getAll();
+
+    int count();
 }

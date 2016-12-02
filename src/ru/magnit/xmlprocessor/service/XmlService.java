@@ -1,9 +1,9 @@
-package ru.magnit.xmlprocessor.xml;
+package ru.magnit.xmlprocessor.service;
 
 import java.io.File;
 import java.util.List;
 
-public interface XmlJuggler<T> {
+public interface XmlService<T> {
     void saveToFile(List<T> entities, File file);
 
     List<T> loadFromFile(File file);

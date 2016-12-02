@@ -1,11 +1,11 @@
-package ru.magnit.xmlprocessor.xml.impl;
+package ru.magnit.xmlprocessor.service.impl;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import ru.magnit.xmlprocessor.entity.Entry;
-import ru.magnit.xmlprocessor.xml.EntryXmlJuggler;
+import ru.magnit.xmlprocessor.service.EntryXmlService;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -18,7 +18,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntryXmlJugglerImpl implements EntryXmlJuggler {
+public class EntryXmlServiceImpl implements EntryXmlService {
     @Override
     public void saveToFile(final List<Entry> entities, final File file) {
         try {

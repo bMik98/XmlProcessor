@@ -5,8 +5,9 @@ import ru.magnit.xmlprocessor.dao.impl.EntryTableDaoImpl;
 import ru.magnit.xmlprocessor.dao.util.ConnectionBuilder;
 import ru.magnit.xmlprocessor.entity.Entry;
 import ru.magnit.xmlprocessor.property.ConnectionProperties;
-import ru.magnit.xmlprocessor.xml.EntryXmlJuggler;
-import ru.magnit.xmlprocessor.xml.impl.EntryXmlJugglerImpl;
+import ru.magnit.xmlprocessor.service.impl.EntryTableService;
+import ru.magnit.xmlprocessor.service.EntryXmlService;
+import ru.magnit.xmlprocessor.service.impl.EntryXmlServiceImpl;
 
 import java.io.File;
 import java.sql.Connection;
@@ -18,23 +19,21 @@ public class XmlProcessor implements ProcessingApplication {
     private final String xslFile = "resources/transform.xsl";
     private ConnectionProperties connectionProperties;
     private int numberN;
-    private EntryTableDao dao;
-    private EntryXmlJuggler xmlJuggler = new EntryXmlJugglerImpl();
 
     @Override
     public long run() {
-        initAndPopulateDbTable(numberN);
-        saveToXmlFile(dao.getAll(), file1);
-        xslTransform(file1, xslFile, file2);
-        List<Entry> entries = LoadFromXmlFile(file2);
-        return CalcSumOfFields(entries);
+        Connection connection = ConnectionBuilder.build(this.connectionProperties);
+        EntryTableDao dao = new EntryTableDaoImpl(connection);
+        EntryTableService tableService = new EntryTableService(dao);
+        tableService.clearAndPopulateTable(numberN);
+        EntryXmlService xmlService = new EntryXmlServiceImpl();
+        xmlService.saveToFile(tableService.getTableContent(), new File(file1));
+        xmlService.transform(file1, xslFile, file2);
+        List<Entry> entries = xmlService.loadFromFile(new File(file2));
+        return sumOfField(entries);
     }
 
-    private List<Entry> LoadFromXmlFile(final String fileName) {
-        return xmlJuggler.loadFromFile(new File(fileName));
-    }
-
-    private long CalcSumOfFields(List<Entry> entries) {
+    private long sumOfField(List<Entry> entries) {
         long result = 0L;
         for (Entry entry : entries) {
             result += entry.getField();
@@ -42,24 +41,9 @@ public class XmlProcessor implements ProcessingApplication {
         return result;
     }
 
-    private void initAndPopulateDbTable(final int numberOfElements) {
-        dao.initTable();
-        dao.populateTable(numberOfElements);
-    }
-
-    private void saveToXmlFile(final List<Entry> entries, final String fileName) {
-        xmlJuggler.saveToFile(entries, new File(fileName));
-    }
-
-    private void xslTransform(final String in, final String xslt, final String out) {
-        xmlJuggler.transform(in, xslt, out);
-    }
-
     @Override
     public void setConnectionProperties(final ConnectionProperties properties) {
         this.connectionProperties = properties;
-        Connection connection = ConnectionBuilder.build(this.connectionProperties);
-        this.dao = new EntryTableDaoImpl(connection);
     }
 
     @Override

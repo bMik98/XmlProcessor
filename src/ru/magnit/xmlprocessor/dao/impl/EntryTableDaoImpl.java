@@ -6,21 +6,23 @@ import ru.magnit.xmlprocessor.entity.Entry;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * @author Mbedritskiy
  */
 public class EntryTableDaoImpl implements EntryTableDao {
-    private final String TABLE_NAME = "TEST";
-    private final String FIELD_NAME = "FIELD";
+    public final String TABLE_NAME = "TEST";
+    public final String FIELD_NAME = "FIELD";
     private Connection connection;
+    private int savedCount = 0;
 
     public EntryTableDaoImpl(Connection connection) {
         this.connection = connection;
     }
 
     @Override
-    public void initTable() {
+    public void deleteAll() {
         final String dropSql = String.format("DROP TABLE IF EXISTS \"%s\"", TABLE_NAME);
         final String createSql = String.format("CREATE TABLE \"%s\" (\"%s\" INTEGER)", TABLE_NAME, FIELD_NAME);
         try {
@@ -30,17 +32,18 @@ public class EntryTableDaoImpl implements EntryTableDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        savedCount = 0;
     }
 
     @Override
-    public void populateTable(final int numberOfEntities) {
+    public void save(final List<Entry> entries) {
         final String insertSql = String.format("INSERT INTO \"%s\" (\"%s\") VALUES (?)", TABLE_NAME, FIELD_NAME);
         PreparedStatement preparedStatement = null;
         try {
             connection.setAutoCommit(false);
             preparedStatement = connection.prepareStatement(insertSql);
-            for (int i = 1; i < numberOfEntities + 1; i++) {
-                preparedStatement.setInt(1, i);
+            for (Entry entry: entries) {
+                preparedStatement.setInt(1, entry.getField());
                 preparedStatement.addBatch();
             }
             preparedStatement.executeBatch();
@@ -61,14 +64,15 @@ public class EntryTableDaoImpl implements EntryTableDao {
                 }
             }
         }
+        savedCount = entries.size();
     }
 
     @Override
     public List<Entry> getAll() {
-        List<Entry> result = new ArrayList<>();
         ResultSet queryResult = queryAll();
-        int fieldIndex = getFieldIndex(queryResult, FIELD_NAME);
+        List<Entry> result = new ArrayList<>(savedCount);
         try {
+            int fieldIndex =queryResult.findColumn(FIELD_NAME);
             while (queryResult.next()) {
                 Entry entry = new Entry();
                 entry.setField(queryResult.getInt(fieldIndex));
@@ -80,14 +84,21 @@ public class EntryTableDaoImpl implements EntryTableDao {
         return result;
     }
 
-    private int getFieldIndex(final ResultSet resultSet, final String fieldName) {
-        int index = 0;
+    @Override
+    public int count() {
+        int recordCount = 0;
+        final String countQuery = String.format("SELECT COUNT(*) FROM \"%s\"", TABLE_NAME);
+        PreparedStatement statement;
         try {
-            index = resultSet.findColumn(fieldName);
+            statement = connection.prepareStatement(countQuery);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()){
+                recordCount = resultSet.getInt(1);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return index;
+        return recordCount;
     }
 
     private ResultSet queryAll() {
